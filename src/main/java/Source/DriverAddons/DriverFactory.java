@@ -35,51 +35,51 @@ public class DriverFactory {
 
     // Returns a driver by driverType with some configurations
 
-    public static CustomDriver GetBrowser(ETypeDriver driverType, int timeout, String[] args) {
+    public static WebDriver GetBrowser(ETypeDriver driverType, int timeout, String[] args) {
         switch (driverType) {
             case FIREFOX -> {
-                return new CustomDriver(GetFirefox(timeout, args));
+                return GetFirefox(timeout, args);
             }
 
             case EDGE -> {
-                return new CustomDriver(GetEdge(timeout, args));
+                return GetEdge(timeout, args);
             }
 
             default -> {
-                return new CustomDriver(GetChrome(timeout, args));
+                return GetChrome(timeout, args);
             }
         }
     }
 
-    public static CustomDriver GetBrowser(ETypeDriver driverType, int timeout) {
+    public static WebDriver GetBrowser(ETypeDriver driverType, int timeout) {
         switch (driverType) {
             case FIREFOX -> {
-                return new CustomDriver(GetFirefox(timeout));
+                return GetFirefox(timeout);
             }
 
             case EDGE -> {
-                return new CustomDriver(GetEdge(timeout));
+                return GetEdge(timeout);
             }
 
             default -> {
-                return new CustomDriver(GetChrome(timeout));
+                return GetChrome(timeout);
             }
         }
     }
 
-    public static CustomDriver GetBrowser(ETypeDriver driverType) {
+    public static WebDriver GetBrowser(ETypeDriver driverType) {
         int timeout = 10000;
         switch (driverType) {
             case FIREFOX -> {
-                return new CustomDriver(GetFirefox(timeout));
+                return GetFirefox(timeout);
             }
 
             case EDGE -> {
-                return new CustomDriver(GetEdge(timeout));
+                return GetEdge(timeout);
             }
 
             default -> {
-                return new CustomDriver(GetChrome(timeout));
+                return GetChrome(timeout);
             }
         }
     }
