@@ -14,7 +14,9 @@ public class Reporter {
     public String getReport(boolean clean) {
         String res = sb.toString();
         if(clean)
-            sb.setLength(0); // clear sb so other tests can use it
+            sb.setLength(0);
+        // clear sb so other tests can use it
+
         return res;
     }
 

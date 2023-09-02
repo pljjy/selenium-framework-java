@@ -36,7 +36,7 @@ public class BaseTest {
 
         String jsonFilePath = projectDir + "\\src\\main\\resources\\cfg.json";
         Map<String, Object> cfgs;
-        int msTimeout = 10000;
+        int timeout = 10;
         String browserName = "chrome";
         try (FileReader reader = new FileReader(jsonFilePath)) {
             Type type = new TypeToken<HashMap<String, Object>>() {
@@ -45,13 +45,13 @@ public class BaseTest {
             cfgs = gson.fromJson(reader, type);
 
             browserName = cfgs.get("browser").toString();
-            msTimeout = (int) ((double) cfgs.get("msTimeout"));
+            timeout = (int) ((double) cfgs.get("timeout"));
             // beautiful java language requires me to convert re Double to double AND THEN to an actual int
         } catch (Exception ignored) {
             log.warn("couldn't find \\src\\main\\resources\\cfg.json OR couldn't get values from it");
         }
 
-        var _driver = DriverFactory.GetBrowser(DriverFactory.stringToEtypeDriver(browserName), msTimeout);
+        var _driver = DriverFactory.GetBrowser(DriverFactory.stringToEtypeDriver(browserName), timeout);
         driver = new CustomDriver(_driver, log);
     }
 

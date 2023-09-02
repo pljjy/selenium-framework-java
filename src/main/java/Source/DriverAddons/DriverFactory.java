@@ -68,7 +68,7 @@ public class DriverFactory {
     }
 
     public static WebDriver GetBrowser(ETypeDriver driverType) {
-        int timeout = 10000;
+        int timeout = 10;
         switch (driverType) {
             case FIREFOX -> {
                 return GetFirefox(timeout);
@@ -94,7 +94,7 @@ public class DriverFactory {
         opts.addArguments(args);
 
         var driver = new ChromeDriver(opts);
-        driver.manage().timeouts().implicitlyWait(timeout, TimeUnit.MICROSECONDS);
+        driver.manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
 
         return driver;
     }
@@ -106,7 +106,7 @@ public class DriverFactory {
         opts.addArguments("--ignore-ssl-errors=yes", "--ignore-certificate-errors", "--window-size=1980,1080");
 
         var driver = new ChromeDriver(opts);
-        driver.manage().timeouts().implicitlyWait(timeout, TimeUnit.MICROSECONDS);
+        driver.manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
 
         return driver;
     }
@@ -119,7 +119,7 @@ public class DriverFactory {
         opts.addArguments(args);
 
         var driver = new FirefoxDriver(opts);
-        driver.manage().timeouts().implicitlyWait(timeout, TimeUnit.MICROSECONDS);
+        driver.manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
 
         return driver;
     }
@@ -131,7 +131,7 @@ public class DriverFactory {
         opts.addArguments("--ignore-ssl-errors=yes", "--ignore-certificate-errors", "--window-size=1980,1080");
 
         var driver = new FirefoxDriver(opts);
-        driver.manage().timeouts().implicitlyWait(timeout, TimeUnit.MICROSECONDS);
+        driver.manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
 
         return driver;
     }
@@ -144,7 +144,7 @@ public class DriverFactory {
         opts.addArguments(args);
 
         var driver = new EdgeDriver(opts);
-        driver.manage().timeouts().implicitlyWait(timeout, TimeUnit.MICROSECONDS);
+        driver.manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
 
         return driver;
     }
@@ -156,7 +156,7 @@ public class DriverFactory {
         opts.addArguments("--ignore-ssl-errors=yes", "--ignore-certificate-errors", "--window-size=1980,1080");
 
         var driver = new EdgeDriver(opts);
-        driver.manage().timeouts().implicitlyWait(timeout, TimeUnit.MICROSECONDS);
+        driver.manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
 
         return driver;
     }
