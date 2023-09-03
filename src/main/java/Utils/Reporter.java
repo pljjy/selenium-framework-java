@@ -37,10 +37,7 @@ public class Reporter {
     }
 
     public void testFailed(ITestResult result) {
-        String stacktrace = Arrays.stream(result.getThrowable().getStackTrace())
-                .map(StackTraceElement::toString)
-                .reduce("", (s1, s2) -> s1 + s2 + "\n");
-        // StackTraceElement[] to String
+        String stacktrace = Constants.stackTraceElementArrayToString(result.getThrowable().getStackTrace());
         sb.append(String.format("\nTest FAILED\n%s\n\nStack trace:\n%s", result.getThrowable().getMessage(), stacktrace));
     }
 

@@ -1,7 +1,11 @@
 package Source;
 
+import Utils.Constants;
 import Utils.Reporter;
+import io.qameta.allure.Allure;
+import io.qameta.allure.AllureLifecycle;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
@@ -28,38 +32,83 @@ public class CustomDriver {
         return new WebDriverWait(driver, Duration.ofSeconds(timeout));
     }
 
-    public void sendKeys(By locator, String text, boolean softAssert){
+    public void sendKeys(By locator, String text, boolean softAssert) {
+        try {
+            var ele = driver.findElement(locator);
+            ele.sendKeys(text);
+            log.info(String.format("successfully entered %s to element %s", text, locator));
+        } catch (ElementNotInteractableException ignored) {
+            if (!softAssert) {
+                log.error(String.format("element is not interactable %s", locator));
+                Assert.fail(String.format("element is not interactable %s", locator));
+            }
 
+            log.warn(String.format("element is not interactable %s", locator));
+        } catch (StaleElementReferenceException ignored) {
+            if (softAssert) {
+                log.error(String.format("element is stale, unable to send input\n locator = %s", locator));
+                Assert.fail(String.format("element is stale, unable to send input\n locator = %s", locator));
+            }
+
+            log.warn(String.format("element is stale, unable to send input\nlocator = %s", locator));
+        } catch (NoSuchElementException ignored) {
+            if (!softAssert) {
+                log.error(String.format("no element found %s", locator));
+                Assert.fail(String.format("no element found %s", locator));
+            }
+
+            log.warn(String.format("no element found %s", locator));
+        } catch (Exception ex) {
+            if (!softAssert) {
+                log.error(String.format("%s\n\n%s", ex.getMessage(),
+                        Constants.stackTraceElementArrayToString(ex.getStackTrace())));
+                Assert.fail(ex.getMessage());
+            }
+
+            log.warn(String.format("element - %s\n%s\n\n%s", locator, ex.getMessage(),
+                    Constants.stackTraceElementArrayToString(ex.getStackTrace())));
+        }
     }
 
-    public void sendKeys(By locator, String text, boolean softAssert, boolean clear){
-        try{
+    public void sendKeys(By locator, String text, boolean softAssert, boolean clear) {
+        try {
             var ele = driver.findElement(locator);
-            if(clear){
+            if (clear) {
                 ele.clear();
             }
 
             ele.sendKeys(text);
             log.info(String.format("successfully entered %s to element %s", text, locator));
-        }
-        catch (ElementNotInteractableException ignored){
-            if(!softAssert){
+        } catch (ElementNotInteractableException ignored) {
+            if (!softAssert) {
                 log.error(String.format("element is not interactable %s", locator));
-                Assert.fail();
+                Assert.fail(String.format("element is not interactable %s", locator));
             }
 
             log.warn(String.format("element is not interactable %s", locator));
-        }
-        catch (StaleElementReferenceException ignored){
-            if(softAssert){
+        } catch (StaleElementReferenceException ignored) {
+            if (softAssert) {
                 log.error(String.format("element is stale, unable to send input\n locator = %s", locator));
-                Assert.fail();
+                Assert.fail(String.format("element is stale, unable to send input\n locator = %s", locator));
             }
 
             log.warn(String.format("element is stale, unable to send input\nlocator = %s", locator));
-        }
-        catch(NoSuchElementException ignored){
+        } catch (NoSuchElementException ignored) {
+            if (!softAssert) {
+                log.error(String.format("no element found %s", locator));
+                Assert.fail(String.format("no element found %s", locator));
+            }
 
+            log.warn(String.format("no element found %s", locator));
+        } catch (Exception ex) {
+            if (!softAssert) {
+                log.error(String.format("%s\n\n%s", ex.getMessage(),
+                        Constants.stackTraceElementArrayToString(ex.getStackTrace())));
+                Assert.fail(ex.getMessage());
+            }
+
+            log.warn(String.format("element - %s\n%s\n\n%s", locator, ex.getMessage(),
+                    Constants.stackTraceElementArrayToString(ex.getStackTrace())));
         }
     }
 
@@ -142,7 +191,7 @@ public class CustomDriver {
             } catch (ElementClickInterceptedException ignored) { // TODO: add other possible exceptions for click()
                 if (!softAssert) {
                     log.error(String.format("element click is intercepted:\nlocator: '%s'", locator));
-                    Assert.fail();
+                    Assert.fail(String.format("element click is intercepted:\nlocator: '%s'", locator));
                 }
 
                 log.warn(String.format("element click is intercepted:\nlocator: '%s'", locator));
@@ -157,7 +206,7 @@ public class CustomDriver {
             } catch (ElementClickInterceptedException ignored) { // TODO: add other possible exceptions for click()
                 if (!softAssert) {
                     log.error(String.format("element click is intercepted:\nlocator: '%s'", locator));
-                    Assert.fail();
+                    Assert.fail(String.format("element click is intercepted:\nlocator: '%s'", locator));
                 }
 
                 log.warn(String.format("element click is intercepted:\nlocator: '%s'", locator));
@@ -168,6 +217,39 @@ public class CustomDriver {
     public void submit(By locator) {
         driver.findElement(locator).submit();
         log.debug(String.format("element %s submitted", locator));
+    }
+
+    public void dragAndDrop(By source, By target, boolean softAssert) {
+        var _source = driver.findElement(source);
+        var _target = driver.findElement(target);
+
+        try {
+            new Actions(driver)
+                    .dragAndDrop(_source, _target)
+                    .perform();
+
+            log.info(String.format("successfully dragged and dropped from from %s to %s", source, target));
+        } catch (Exception ignored) {
+            if (!softAssert) {
+                log.error(String.format("can't drag from %s and drop to %s", source, target));
+                Assert.fail(String.format("can't drag from %s and drop to %s", source, target));
+            }
+
+            log.warn(String.format("can't drag from %s and drop to %s", source, target));
+        }
+    }
+
+    public void takeScreenshot(boolean fullPage) {
+        if (fullPage) {
+            takeFullPageScreenshot();
+        } else {
+            Allure.addAttachment("Screenshot", "application/jpeg",
+                    ((TakesScreenshot) driver).getScreenshotAs(OutputType.BASE64));
+        }
+    }
+
+    public void takeFullPageScreenshot() {
+        // TODO: do this using html2canvas
     }
 
 
@@ -197,15 +279,27 @@ public class CustomDriver {
     }
 
 
-    public void assertElementIsPresent(By locator, boolean expected){
+    public void assertElementIsPresent(By locator, boolean expected) {
         boolean actual = isPresent(locator);
         log.info(String.format("element %s\nisPresent: %s\nshouldBePresent: %s", locator, actual, expected));
         Assert.assertEquals(actual, expected);
     }
 
-    public void assertElementIsPresent(By locator){
+    public void assertElementIsPresent(By locator) {
         boolean actual = isPresent(locator);
         log.info(String.format("element %s\nisPresent: %s\nshouldBePresent: %s", locator, actual, true));
+        Assert.assertTrue(actual);
+    }
+
+    public void assertElementIsVisible(By locator, boolean expected) {
+        boolean actual = isVisible(locator);
+        log.info(String.format("element %s\nisVisible: %s\nshouldBeVisible: %s", locator, actual, expected));
+        Assert.assertEquals(actual, expected);
+    }
+
+    public void assertElementIsVisible(By locator) {
+        boolean actual = isVisible(locator);
+        log.info(String.format("element %s\nisVisible: %s\nshouldBeVisible: %s", locator, actual, true));
         Assert.assertTrue(actual);
     }
 }
