@@ -3,7 +3,6 @@ package Source;
 import Utils.Constants;
 import Utils.Reporter;
 import io.qameta.allure.Allure;
-import io.qameta.allure.AllureLifecycle;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -195,6 +194,22 @@ public class CustomDriver {
                 }
 
                 log.warn(String.format("element click is intercepted:\nlocator: '%s'", locator));
+            } catch (NoSuchElementException ignored) {
+                if (!softAssert) {
+                    log.error(String.format("no element found %s", locator));
+                    Assert.fail(String.format("no element found %s", locator));
+                }
+
+                log.warn(String.format("no element found %s", locator));
+            } catch (Exception ex) {
+                if (!softAssert) {
+                    log.error(String.format("%s\n\n%s", ex.getMessage(),
+                            Constants.stackTraceElementArrayToString(ex.getStackTrace())));
+                    Assert.fail(ex.getMessage());
+                }
+
+                log.warn(String.format("element - %s\n%s\n\n%s", locator, ex.getMessage(),
+                        Constants.stackTraceElementArrayToString(ex.getStackTrace())));
             }
         }
     }
@@ -210,6 +225,22 @@ public class CustomDriver {
                 }
 
                 log.warn(String.format("element click is intercepted:\nlocator: '%s'", locator));
+            } catch (NoSuchElementException ignored) {
+                if (!softAssert) {
+                    log.error(String.format("no element found %s", locator));
+                    Assert.fail(String.format("no element found %s", locator));
+                }
+
+                log.warn(String.format("no element found %s", locator));
+            } catch (Exception ex) {
+                if (!softAssert) {
+                    log.error(String.format("%s\n\n%s", ex.getMessage(),
+                            Constants.stackTraceElementArrayToString(ex.getStackTrace())));
+                    Assert.fail(ex.getMessage());
+                }
+
+                log.warn(String.format("element - %s\n%s\n\n%s", locator, ex.getMessage(),
+                        Constants.stackTraceElementArrayToString(ex.getStackTrace())));
             }
         }
     }

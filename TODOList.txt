@@ -1,4 +1,3 @@
 - add screenshots to logs
 - add api tests
 - maybe make another base test for api tests
-- complete CustomDriver
