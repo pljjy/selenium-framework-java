@@ -2,8 +2,6 @@ package Utils;
 
 import org.testng.ITestResult;
 
-import java.util.Arrays;
-
 public class Reporter {
     StringBuilder sb = new StringBuilder();
 

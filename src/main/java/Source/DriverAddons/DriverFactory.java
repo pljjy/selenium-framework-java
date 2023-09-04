@@ -35,6 +35,24 @@ public class DriverFactory {
 
     // Returns a driver by driverType with some configurations
 
+    public static WebDriver GetBrowser(ETypeDriver driverType, int timeout, String[] args, boolean _headless) {
+        headless = _headless;
+        switch (driverType) {
+            case FIREFOX -> {
+                return GetFirefox(timeout, args);
+            }
+
+            case EDGE -> {
+                return GetEdge(timeout, args);
+            }
+
+            default -> {
+                return GetChrome(timeout, args);
+            }
+        }
+    }
+
+
     public static WebDriver GetBrowser(ETypeDriver driverType, int timeout, String[] args) {
         switch (driverType) {
             case FIREFOX -> {
@@ -47,6 +65,23 @@ public class DriverFactory {
 
             default -> {
                 return GetChrome(timeout, args);
+            }
+        }
+    }
+
+    public static WebDriver GetBrowser(ETypeDriver driverType, int timeout, boolean _headless) {
+        headless = _headless;
+        switch (driverType) {
+            case FIREFOX -> {
+                return GetFirefox(timeout);
+            }
+
+            case EDGE -> {
+                return GetEdge(timeout);
+            }
+
+            default -> {
+                return GetChrome(timeout);
             }
         }
     }

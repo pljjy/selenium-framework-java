@@ -8,6 +8,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
+import java.io.ByteArrayInputStream;
 import java.time.Duration;
 import java.util.Objects;
 
@@ -270,16 +271,17 @@ public class CustomDriver {
         }
     }
 
-    public void takeScreenshot(boolean fullPage) {
+    public void takeScreenshot(boolean fullPage, String testName) {
         if (fullPage) {
             takeFullPageScreenshot();
         } else {
-            Allure.addAttachment("Screenshot", "application/jpeg",
-                    ((TakesScreenshot) driver).getScreenshotAs(OutputType.BASE64));
+            Allure.addAttachment(testName, new ByteArrayInputStream(((TakesScreenshot) driver).
+                    getScreenshotAs(OutputType.BYTES)));
+
         }
     }
 
-    public void takeFullPageScreenshot() {
+    private void takeFullPageScreenshot() {
         // TODO: do this using html2canvas
     }
 
