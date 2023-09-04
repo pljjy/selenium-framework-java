@@ -1,3 +1,2 @@
-- add screenshots to logs
+- add fullPageScreenshot using html2canvas to allure
 - add api tests
-- maybe make another base test for api tests
