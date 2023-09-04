@@ -11,7 +11,7 @@ public class Reporter {
 
     public String getReport(boolean clean) {
         String res = sb.toString();
-        if(clean)
+        if (clean)
             sb.setLength(0);
         // clear sb so other tests can use it
 
@@ -19,20 +19,37 @@ public class Reporter {
     }
 
     public void info(String text) {
-        sb.append("[INFO ] ").append(text).append("\n");
+//        sb.append("[INFO ] ").append(text).append("\n");
+    }
+
+    public void info(String text, Object... args) {
+        sb.append("[INFO ] ").append(String.format(text, args)).append("\n");
     }
 
     public void debug(String text) {
         sb.append("[DEBUG] ").append(text).append("\n");
     }
 
+    public void debug(String text, Object... args) {
+        sb.append("[DEBUG] ").append(String.format(text, args)).append("\n");
+    }
+
     public void warn(String text) {
         sb.append("[WARN ] ").append(text).append("\n");
+    }
+
+    public void warn(String text, Object... args) {
+        sb.append("[WARN ] ").append(String.format(text, args)).append("\n");
     }
 
     public void error(String text) {
         sb.append("[ERROR] ").append(text).append("\n");
     }
+
+    public void error(String text, Object... args) {
+        sb.append("[ERROR] ").append(String.format(text, args)).append("\n");
+    }
+
 
     public void testFailed(ITestResult result) {
         String stacktrace = Constants.stackTraceElementArrayToString(result.getThrowable().getStackTrace());

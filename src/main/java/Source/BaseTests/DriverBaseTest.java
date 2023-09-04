@@ -9,9 +9,7 @@ import io.qameta.allure.Allure;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 
-import java.io.File;
 import java.io.FileReader;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -28,12 +26,12 @@ Override _cleanLogs and set it to FALSE if you have tests that are related to ea
 public class DriverBaseTest {
     boolean _cleanLogs = true;
     public CustomDriver driver;
-    public  Reporter log = new Reporter();
+    public Reporter log = new Reporter();
 
     @BeforeMethod
     public void setUpDriver() {
         String jsonFilePath = projectDir + "\\src\\main\\resources\\cfg.json";
-        Map<String, Object> cfgs;
+        Map<String, Object> args;
         int timeout = 10;
         String browserName = "chrome";
         boolean headless = true;
@@ -41,11 +39,11 @@ public class DriverBaseTest {
             Type type = new TypeToken<HashMap<String, Object>>() {
             }.getType();
             Gson gson = new Gson();
-            cfgs = gson.fromJson(reader, type);
+            args = gson.fromJson(reader, type);
 
-            browserName = cfgs.get("browser").toString();
-            timeout = (int) ((double) cfgs.get("timeout"));
-            headless = (boolean) cfgs.get("headless");
+            browserName = args.get("browser").toString();
+            timeout = (int) ((double) args.get("timeout"));
+            headless = (boolean) args.get("headless");
 
         } catch (Exception ignored) {
             log.warn("couldn't find \\src\\main\\resources\\cfg.json OR couldn't get values from it");

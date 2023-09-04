@@ -1,6 +1,5 @@
 package Source.DriverAddons;
 
-import Source.CustomDriver;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -10,7 +9,7 @@ import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
 public class DriverFactory {
 
@@ -19,18 +18,12 @@ public class DriverFactory {
     // Takes a string of a browser name and returns corresponding ETypeDriver
     public static ETypeDriver stringToEtypeDriver(String browser) {
         browser = browser.toLowerCase();
-        switch (browser) {
-            case "firefox":
-            case "mozilla":
-                return ETypeDriver.FIREFOX;
+        return switch (browser) {
+            case "firefox", "mozilla" -> ETypeDriver.FIREFOX;
+            case "edge", "ms edge", "microsoft edge:" -> ETypeDriver.EDGE;
+            default -> ETypeDriver.CHROME;
+        };
 
-            case "edge":
-            case "ms edge":
-            case "microsoft edge:":
-                return ETypeDriver.EDGE;
-        }
-
-        return ETypeDriver.CHROME;
     }
 
     // Returns a driver by driverType with some configurations
@@ -129,7 +122,7 @@ public class DriverFactory {
         opts.addArguments(args);
 
         var driver = new ChromeDriver(opts);
-        driver.manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(timeout));
 
         return driver;
     }
@@ -141,7 +134,7 @@ public class DriverFactory {
         opts.addArguments("--ignore-ssl-errors=yes", "--ignore-certificate-errors", "--window-size=1980,1080");
 
         var driver = new ChromeDriver(opts);
-        driver.manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(timeout));
 
         return driver;
     }
@@ -154,7 +147,7 @@ public class DriverFactory {
         opts.addArguments(args);
 
         var driver = new FirefoxDriver(opts);
-        driver.manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(timeout));
 
         return driver;
     }
@@ -166,7 +159,7 @@ public class DriverFactory {
         opts.addArguments("--ignore-ssl-errors=yes", "--ignore-certificate-errors", "--window-size=1980,1080");
 
         var driver = new FirefoxDriver(opts);
-        driver.manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(timeout));
 
         return driver;
     }
@@ -179,7 +172,7 @@ public class DriverFactory {
         opts.addArguments(args);
 
         var driver = new EdgeDriver(opts);
-        driver.manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(timeout));
 
         return driver;
     }
@@ -191,7 +184,7 @@ public class DriverFactory {
         opts.addArguments("--ignore-ssl-errors=yes", "--ignore-certificate-errors", "--window-size=1980,1080");
 
         var driver = new EdgeDriver(opts);
-        driver.manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(timeout));
 
         return driver;
     }

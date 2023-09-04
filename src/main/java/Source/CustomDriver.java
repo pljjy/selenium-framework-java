@@ -36,37 +36,37 @@ public class CustomDriver {
         try {
             var ele = driver.findElement(locator);
             ele.sendKeys(text);
-            log.info(String.format("successfully entered %s to element %s", text, locator));
+            log.info("successfully entered %s to element %s", text, locator);
         } catch (ElementNotInteractableException ignored) {
             if (!softAssert) {
-                log.error(String.format("element is not interactable %s", locator));
+                log.error("element is not interactable %s", locator);
                 Assert.fail(String.format("element is not interactable %s", locator));
             }
 
-            log.warn(String.format("element is not interactable %s", locator));
+            log.warn("element is not interactable %s", locator);
         } catch (StaleElementReferenceException ignored) {
             if (softAssert) {
-                log.error(String.format("element is stale, unable to send input\n locator = %s", locator));
+                log.error("element is stale, unable to send input\n locator = %s", locator);
                 Assert.fail(String.format("element is stale, unable to send input\n locator = %s", locator));
             }
 
-            log.warn(String.format("element is stale, unable to send input\nlocator = %s", locator));
+            log.warn("element is stale, unable to send input\nlocator = %s", locator);
         } catch (NoSuchElementException ignored) {
             if (!softAssert) {
-                log.error(String.format("no element found %s", locator));
+                log.error("no element found %s", locator);
                 Assert.fail(String.format("no element found %s", locator));
             }
 
-            log.warn(String.format("no element found %s", locator));
+            log.warn("no element found %s", locator);
         } catch (Exception ex) {
             if (!softAssert) {
-                log.error(String.format("%s\n\n%s", ex.getMessage(),
-                        Constants.stackTraceElementArrayToString(ex.getStackTrace())));
+                log.error("%s\n\n%s", ex.getMessage(),
+                        Constants.stackTraceElementArrayToString(ex.getStackTrace()));
                 Assert.fail(ex.getMessage());
             }
 
-            log.warn(String.format("element - %s\n%s\n\n%s", locator, ex.getMessage(),
-                    Constants.stackTraceElementArrayToString(ex.getStackTrace())));
+            log.warn("element - %s\n%s\n\n%s", locator, ex.getMessage(),
+                    Constants.stackTraceElementArrayToString(ex.getStackTrace()));
         }
     }
 
@@ -78,37 +78,37 @@ public class CustomDriver {
             }
 
             ele.sendKeys(text);
-            log.info(String.format("successfully entered %s to element %s", text, locator));
+            log.info("successfully entered %s to element %s", text, locator);
         } catch (ElementNotInteractableException ignored) {
             if (!softAssert) {
-                log.error(String.format("element is not interactable %s", locator));
+                log.error("element is not interactable %s", locator);
                 Assert.fail(String.format("element is not interactable %s", locator));
             }
 
-            log.warn(String.format("element is not interactable %s", locator));
+            log.warn("element is not interactable %s", locator);
         } catch (StaleElementReferenceException ignored) {
             if (softAssert) {
-                log.error(String.format("element is stale, unable to send input\n locator = %s", locator));
+                log.error("element is stale, unable to send input\n locator = %s", locator);
                 Assert.fail(String.format("element is stale, unable to send input\n locator = %s", locator));
             }
 
-            log.warn(String.format("element is stale, unable to send input\nlocator = %s", locator));
+            log.warn("element is stale, unable to send input\nlocator = %s", locator);
         } catch (NoSuchElementException ignored) {
             if (!softAssert) {
-                log.error(String.format("no element found %s", locator));
+                log.error("no element found %s", locator);
                 Assert.fail(String.format("no element found %s", locator));
             }
 
-            log.warn(String.format("no element found %s", locator));
+            log.warn("no element found %s", locator);
         } catch (Exception ex) {
             if (!softAssert) {
-                log.error(String.format("%s\n\n%s", ex.getMessage(),
-                        Constants.stackTraceElementArrayToString(ex.getStackTrace())));
+                log.error("%s\n\n%s", ex.getMessage(),
+                        Constants.stackTraceElementArrayToString(ex.getStackTrace()));
                 Assert.fail(ex.getMessage());
             }
 
-            log.warn(String.format("element - %s\n%s\n\n%s", locator, ex.getMessage(),
-                    Constants.stackTraceElementArrayToString(ex.getStackTrace())));
+            log.warn("element - %s\n%s\n\n%s", locator, ex.getMessage(),
+                    Constants.stackTraceElementArrayToString(ex.getStackTrace()));
         }
     }
 
@@ -181,7 +181,7 @@ public class CustomDriver {
 
     public void get(String url) {
         driver.get(url);
-        log.info(String.format("driver got to %s", url));
+        log.info("driver got to %s", url);
     }
 
     public void click(By locator, boolean softAssert, int timeout) {
@@ -190,27 +190,27 @@ public class CustomDriver {
                 driver.findElement(locator);
             } catch (ElementClickInterceptedException ignored) { // TODO: add other possible exceptions for click()
                 if (!softAssert) {
-                    log.error(String.format("element click is intercepted:\nlocator: '%s'", locator));
+                    log.error("element click is intercepted:\nlocator: '%s'", locator);
                     Assert.fail(String.format("element click is intercepted:\nlocator: '%s'", locator));
                 }
 
-                log.warn(String.format("element click is intercepted:\nlocator: '%s'", locator));
+                log.warn("element click is intercepted:\nlocator: '%s'", locator);
             } catch (NoSuchElementException ignored) {
                 if (!softAssert) {
-                    log.error(String.format("no element found %s", locator));
+                    log.error("no element found %s", locator);
                     Assert.fail(String.format("no element found %s", locator));
                 }
 
-                log.warn(String.format("no element found %s", locator));
+                log.warn("no element found %s", locator);
             } catch (Exception ex) {
                 if (!softAssert) {
-                    log.error(String.format("%s\n\n%s", ex.getMessage(),
-                            Constants.stackTraceElementArrayToString(ex.getStackTrace())));
+                    log.error("%s\n\n%s", ex.getMessage(),
+                            Constants.stackTraceElementArrayToString(ex.getStackTrace()));
                     Assert.fail(ex.getMessage());
                 }
 
-                log.warn(String.format("element - %s\n%s\n\n%s", locator, ex.getMessage(),
-                        Constants.stackTraceElementArrayToString(ex.getStackTrace())));
+                log.warn("element - %s\n%s\n\n%s", locator, ex.getMessage(),
+                        Constants.stackTraceElementArrayToString(ex.getStackTrace()));
             }
         }
     }
@@ -221,34 +221,34 @@ public class CustomDriver {
                 driver.findElement(locator);
             } catch (ElementClickInterceptedException ignored) { // TODO: add other possible exceptions for click()
                 if (!softAssert) {
-                    log.error(String.format("element click is intercepted:\nlocator: '%s'", locator));
+                    log.error("element click is intercepted:\nlocator: '%s'", locator);
                     Assert.fail(String.format("element click is intercepted:\nlocator: '%s'", locator));
                 }
 
-                log.warn(String.format("element click is intercepted:\nlocator: '%s'", locator));
+                log.warn("element click is intercepted:\nlocator: '%s'", locator);
             } catch (NoSuchElementException ignored) {
                 if (!softAssert) {
-                    log.error(String.format("no element found %s", locator));
+                    log.error("no element found %s", locator);
                     Assert.fail(String.format("no element found %s", locator));
                 }
 
-                log.warn(String.format("no element found %s", locator));
+                log.warn("no element found %s", locator);
             } catch (Exception ex) {
                 if (!softAssert) {
-                    log.error(String.format("%s\n\n%s", ex.getMessage(),
-                            Constants.stackTraceElementArrayToString(ex.getStackTrace())));
+                    log.error("%s\n\n%s", ex.getMessage(),
+                            Constants.stackTraceElementArrayToString(ex.getStackTrace()));
                     Assert.fail(ex.getMessage());
                 }
 
-                log.warn(String.format("element - %s\n%s\n\n%s", locator, ex.getMessage(),
-                        Constants.stackTraceElementArrayToString(ex.getStackTrace())));
+                log.warn("element - %s\n%s\n\n%s", locator, ex.getMessage(),
+                        Constants.stackTraceElementArrayToString(ex.getStackTrace()));
             }
         }
     }
 
     public void submit(By locator) {
         driver.findElement(locator).submit();
-        log.debug(String.format("element %s submitted", locator));
+        log.debug("element %s submitted", locator);
     }
 
     public void dragAndDrop(By source, By target, boolean softAssert) {
@@ -260,14 +260,14 @@ public class CustomDriver {
                     .dragAndDrop(_source, _target)
                     .perform();
 
-            log.info(String.format("successfully dragged and dropped from from %s to %s", source, target));
+            log.info("successfully dragged and dropped from from %s to %s", source, target);
         } catch (Exception ignored) {
             if (!softAssert) {
-                log.error(String.format("can't drag from %s and drop to %s", source, target));
+                log.error("can't drag from %s and drop to %s", source, target);
                 Assert.fail(String.format("can't drag from %s and drop to %s", source, target));
             }
 
-            log.warn(String.format("can't drag from %s and drop to %s", source, target));
+            log.warn("can't drag from %s and drop to %s", source, target);
         }
     }
 
@@ -289,50 +289,50 @@ public class CustomDriver {
     // ASSERTIONS
     public void assertElementIsInteractable(By locator, boolean expected, int timeout) {
         boolean actual = isInteractable(locator, timeout);
-        log.info(String.format("element %s\nisVisible: %s\nshouldBeVisible: %s", locator, actual, expected));
+        log.info("element %s\nisVisible: %s\nshouldBeVisible: %s", locator, actual, expected);
         Assert.assertEquals(actual, expected);
     }
 
     public void assertElementIsInteractable(By locator, int timeout) {
         boolean actual = isInteractable(locator, timeout);
-        log.info(String.format("element %s\nisVisible: %s\nshouldBeVisible: %s", locator, actual, true));
+        log.info("element %s\nisVisible: %s\nshouldBeVisible: %s", locator, actual, true);
         Assert.assertTrue(actual);
     }
 
     public void assertElementIsInteractable(By locator, boolean expected) {
         boolean actual = isInteractable(locator, 10);
-        log.info(String.format("element %s\nisVisible: %s\nshouldBeVisible: %s", locator, actual, expected));
+        log.info("element %s\nisVisible: %s\nshouldBeVisible: %s", locator, actual, expected);
         Assert.assertEquals(actual, expected);
     }
 
     public void assertElementIsInteractable(By locator) {
         boolean actual = isInteractable(locator, 10);
-        log.info(String.format("element %s\nisVisible: %s\nshouldBeVisible: %s", locator, actual, true));
+        log.info("element %s\nisVisible: %s\nshouldBeVisible: %s", locator, actual, true);
         Assert.assertTrue(actual);
     }
 
 
     public void assertElementIsPresent(By locator, boolean expected) {
         boolean actual = isPresent(locator);
-        log.info(String.format("element %s\nisPresent: %s\nshouldBePresent: %s", locator, actual, expected));
+        log.info("element %s\nisPresent: %s\nshouldBePresent: %s", locator, actual, expected);
         Assert.assertEquals(actual, expected);
     }
 
     public void assertElementIsPresent(By locator) {
         boolean actual = isPresent(locator);
-        log.info(String.format("element %s\nisPresent: %s\nshouldBePresent: %s", locator, actual, true));
+        log.info("element %s\nisPresent: %s\nshouldBePresent: %s", locator, actual, true);
         Assert.assertTrue(actual);
     }
 
     public void assertElementIsVisible(By locator, boolean expected) {
         boolean actual = isVisible(locator);
-        log.info(String.format("element %s\nisVisible: %s\nshouldBeVisible: %s", locator, actual, expected));
+        log.info("element %s\nisVisible: %s\nshouldBeVisible: %s", locator, actual, expected);
         Assert.assertEquals(actual, expected);
     }
 
     public void assertElementIsVisible(By locator) {
         boolean actual = isVisible(locator);
-        log.info(String.format("element %s\nisVisible: %s\nshouldBeVisible: %s", locator, actual, true));
+        log.info("element %s\nisVisible: %s\nshouldBeVisible: %s", locator, actual, true);
         Assert.assertTrue(actual);
     }
 }
