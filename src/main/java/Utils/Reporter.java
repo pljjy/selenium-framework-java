@@ -18,12 +18,20 @@ public class Reporter {
         return res;
     }
 
+    public void info(Object obj) {
+        sb.append("[INFO ] ").append(obj).append("\n");
+    }
+
     public void info(String text) {
-//        sb.append("[INFO ] ").append(text).append("\n");
+        sb.append("[INFO ] ").append(text).append("\n");
     }
 
     public void info(String text, Object... args) {
         sb.append("[INFO ] ").append(String.format(text, args)).append("\n");
+    }
+
+    public void debug(Object obj) {
+        sb.append("[DEBUG] ").append(obj).append("\n");
     }
 
     public void debug(String text) {
@@ -34,12 +42,20 @@ public class Reporter {
         sb.append("[DEBUG] ").append(String.format(text, args)).append("\n");
     }
 
+    public void warn(Object obj) {
+        sb.append("[WARN ] ").append(obj).append("\n");
+    }
+
     public void warn(String text) {
         sb.append("[WARN ] ").append(text).append("\n");
     }
 
     public void warn(String text, Object... args) {
         sb.append("[WARN ] ").append(String.format(text, args)).append("\n");
+    }
+
+    public void error(Object obj) {
+        sb.append("[ERROR] ").append(obj).append("\n");
     }
 
     public void error(String text) {

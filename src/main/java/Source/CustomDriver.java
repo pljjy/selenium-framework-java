@@ -3,23 +3,36 @@ package Source;
 import Utils.Constants;
 import Utils.Reporter;
 import io.qameta.allure.Allure;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class CustomDriver {
     public WebDriver driver;
     public JavascriptExecutor js;
     private final Reporter log;
+    public WebDriverWait wait;
 
     public CustomDriver(WebDriver driver, Reporter log) {
         this.driver = driver;
         this.log = log;
+        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        js = (JavascriptExecutor) driver;
+    }
+
+    public CustomDriver(WebDriver driver, Reporter log, int timeout) {
+        this.driver = driver;
+        this.log = log;
+        wait = new WebDriverWait(driver, Duration.ofSeconds(timeout));
         js = (JavascriptExecutor) driver;
     }
 
@@ -28,8 +41,21 @@ public class CustomDriver {
         driver.quit();
     }
 
-    public WebDriverWait wait(int timeout) {
-        return new WebDriverWait(driver, Duration.ofSeconds(timeout));
+    public void sendKeys(By locator, String text) {
+        try {
+            var ele = driver.findElement(locator);
+            ele.sendKeys(text);
+            log.info("successfully entered %s to element %s", text, locator);
+        } catch (ElementNotInteractableException ignored) {
+            log.warn("element is not interactable %s", locator);
+        } catch (StaleElementReferenceException ignored) {
+            log.warn("element is stale, unable to send input\nlocator = %s", locator);
+        } catch (NoSuchElementException ignored) {
+            log.warn("no element found %s", locator);
+        } catch (Exception ex) {
+            log.warn("element - %s\n%s\n\n%s", locator, ex.getMessage(),
+                    Constants.stackTraceElementArrayToString(ex.getStackTrace()));
+        }
     }
 
     public void sendKeys(By locator, String text, boolean softAssert) {
@@ -171,7 +197,7 @@ public class CustomDriver {
 
     public boolean isInteractable(By locator, int timeout) {
         try {
-            wait(timeout).until($ ->
+            wait.until($ ->
                     driver.findElement(locator).isEnabled() && driver.findElement(locator).isDisplayed());
             return true;
         } catch (Exception ignored) {
@@ -248,7 +274,12 @@ public class CustomDriver {
 
     public void submit(By locator) {
         driver.findElement(locator).submit();
-        log.debug("element %s submitted", locator);
+        log.info("element %s submitted", locator);
+    }
+
+    public void submit() {
+        driver.switchTo().activeElement().submit();
+        log.info("active element submitted");
     }
 
     public void dragAndDrop(By source, By target, boolean softAssert) {
@@ -273,16 +304,40 @@ public class CustomDriver {
 
     public void takeScreenshot(boolean fullPage, String testName) {
         if (fullPage) {
-            takeFullPageScreenshot();
+            takeFullPageScreenshot(testName);
         } else {
             Allure.addAttachment(testName, new ByteArrayInputStream(((TakesScreenshot) driver).
                     getScreenshotAs(OutputType.BYTES)));
-
         }
     }
 
-    private void takeFullPageScreenshot() {
-        // TODO: do this using html2canvas
+    // god forgive me for this
+    private void takeFullPageScreenshot(String testName) {
+        String html2canvasJs;
+        try {
+            html2canvasJs = FileUtils.readFileToString(new File("src/main/resources/html2canvas.js"), "utf-8");
+        } catch (IOException e) {
+            log.error("Got IOException, couldn't take a full page screenshot\n\n%s\n%s", e.getMessage(), e.getStackTrace());
+            return;
+        }
+
+        // something here is wrong
+        String generateScreenshotJs = "var canvasImgContentDecoded;function genScreenshot () {html2canvas(document.body).then(function(canvas) {window.canvasImgContentDecoded = canvas.toDataURL('image/png');console.log(window.canvasImgContentDecoded);});}genScreenshot();";
+        String getScreenshot = "return window.canvasImgContentDecoded;";
+        AtomicReference<Object> encodedPngContent = new AtomicReference<>(null);
+
+        js.executeScript(html2canvasJs);
+        js.executeScript(generateScreenshotJs);
+
+        wait.until($ -> {
+            encodedPngContent.set(js.executeScript(getScreenshot));
+            return encodedPngContent.get() != null;
+        });
+
+        String pngContent = encodedPngContent.toString();
+        pngContent = pngContent.replace("data:image/png;base64,", "");
+        // TODO: find a way to attach the screenshot instead of the text
+        Allure.addAttachment(testName, new ByteArrayInputStream(pngContent.getBytes()));
     }
 
 
