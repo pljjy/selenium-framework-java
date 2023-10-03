@@ -312,16 +312,16 @@ public class CustomDriver {
     }
 
     // god forgive me for this
-    private void takeFullPageScreenshot(String testName) {
+    private void takeFullPageScreenshot(String testName){
         String html2canvasJs;
         try {
             html2canvasJs = FileUtils.readFileToString(new File("src/main/resources/html2canvas.js"), "utf-8");
         } catch (IOException e) {
-            log.error("Got IOException, couldn't take a full page screenshot\n\n%s\n%s", e.getMessage(), e.getStackTrace());
+            log.error("Couldn't read html2canvas.js, taking regular screenshot instead of a full page one");
+            takeScreenshot(false, testName);
             return;
         }
 
-        // something here is wrong
         String generateScreenshotJs = "var canvasImgContentDecoded;function genScreenshot () {html2canvas(document.body).then(function(canvas) {window.canvasImgContentDecoded = canvas.toDataURL('image/png');console.log(window.canvasImgContentDecoded);});}genScreenshot();";
         String getScreenshot = "return window.canvasImgContentDecoded;";
         AtomicReference<Object> encodedPngContent = new AtomicReference<>(null);
@@ -336,8 +336,22 @@ public class CustomDriver {
 
         String pngContent = encodedPngContent.toString();
         pngContent = pngContent.replace("data:image/png;base64,", "");
-        // TODO: find a way to attach the screenshot instead of the text
-        Allure.addAttachment(testName, new ByteArrayInputStream(pngContent.getBytes()));
+
+        // use the commented code if you find a way to use BufferedImage
+//        BufferedImage bf = null;
+//        try (ByteArrayInputStream bis = new ByteArrayInputStream(Base64.getDecoder().decode(pngContent))){
+//            bf = ImageIO.read(bis);
+//        }catch (Exception ignored){}
+//
+//        byte[] image = null;
+//        try(ByteArrayOutputStream bos = new ByteArrayOutputStream()){
+//            //noinspection DataFlowIssue
+//            ImageIO.write(bf, "png", bos);
+//            image = bos.toByteArray();
+//        }catch (Exception ignored){}
+
+        // TODO: find a way to attach screenshot without an error
+        Allure.addAttachment(testName, "image/png", pngContent, ".png");
     }
 
 
