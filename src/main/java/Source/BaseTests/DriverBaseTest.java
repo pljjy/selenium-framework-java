@@ -57,7 +57,7 @@ public class DriverBaseTest {
     public void Logs(ITestResult result) {
         switch (result.getStatus()) {
             case ITestResult.FAILURE -> {
-                driver.takeScreenshot(result.getTestName());
+                driver.takeScreenshot();
                 log.testFailed(result);
             }
             case ITestResult.SKIP -> log.testSkipped(result);

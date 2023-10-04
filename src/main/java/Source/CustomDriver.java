@@ -302,20 +302,20 @@ public class CustomDriver {
         }
     }
 
-    public void takeScreenshot(String testName) {
-        Allure.addAttachment(testName, new ByteArrayInputStream(((TakesScreenshot) driver).
+    public void takeScreenshot() {
+        Allure.addAttachment("screenshot", new ByteArrayInputStream(((TakesScreenshot) driver).
                 getScreenshotAs(OutputType.BYTES)));
     }
 
 
-    @Deprecated()
-    public void takeFullPageScreenshot(String testName) {
+    // It's REALLY slow and a little buggy, you should use takeScreenshot() if it's possible
+    public void takeFullPageScreenshot() {
         String html2canvasJs;
         try {
             html2canvasJs = FileUtils.readFileToString(new File("src/main/resources/html2canvas.js"), "utf-8");
         } catch (IOException e) {
             log.error("Couldn't read html2canvas.js, taking regular screenshot instead of a full page one");
-            takeScreenshot(testName);
+            takeScreenshot();
             return;
         }
 
@@ -331,11 +331,7 @@ public class CustomDriver {
             return encodedPngContent.get() != null;
         });
 
-        String pngContent = encodedPngContent.toString();
-        pngContent = pngContent.replace("data:image/png;base64,", "");
-
-        // TODO: find a way to attach screenshot without an error
-        Allure.addAttachment(testName, new ByteArrayInputStream(pngContent.getBytes()));
+        Allure.addAttachment("full page screenshot", "text/html", "<a target='_blank' href='" + encodedPngContent + "'>Click link to see the screenshot</a>", "html");
     }
 
 
