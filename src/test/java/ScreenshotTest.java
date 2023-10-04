@@ -8,7 +8,6 @@ public class ScreenshotTest extends DriverBaseTest {
         driver.get("https://google.com");
         driver.sendKeys(By.xpath("//*[@name='q']"), "cats");
         driver.submit();
-        driver.takeScreenshot(true, this.getClass().getName());
-        driver.takeScreenshot(false, this.getClass().getName());
+        driver.takeScreenshot(this.getClass().getName());
     }
 }

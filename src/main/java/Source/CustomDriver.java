@@ -302,23 +302,20 @@ public class CustomDriver {
         }
     }
 
-    public void takeScreenshot(boolean fullPage, String testName) {
-        if (fullPage) {
-            takeFullPageScreenshot(testName);
-        } else {
-            Allure.addAttachment(testName, new ByteArrayInputStream(((TakesScreenshot) driver).
-                    getScreenshotAs(OutputType.BYTES)));
-        }
+    public void takeScreenshot(String testName) {
+        Allure.addAttachment(testName, new ByteArrayInputStream(((TakesScreenshot) driver).
+                getScreenshotAs(OutputType.BYTES)));
     }
 
-    // god forgive me for this
-    private void takeFullPageScreenshot(String testName){
+
+    @Deprecated()
+    public void takeFullPageScreenshot(String testName) {
         String html2canvasJs;
         try {
             html2canvasJs = FileUtils.readFileToString(new File("src/main/resources/html2canvas.js"), "utf-8");
         } catch (IOException e) {
             log.error("Couldn't read html2canvas.js, taking regular screenshot instead of a full page one");
-            takeScreenshot(false, testName);
+            takeScreenshot(testName);
             return;
         }
 
@@ -337,21 +334,8 @@ public class CustomDriver {
         String pngContent = encodedPngContent.toString();
         pngContent = pngContent.replace("data:image/png;base64,", "");
 
-        // use the commented code if you find a way to use BufferedImage
-//        BufferedImage bf = null;
-//        try (ByteArrayInputStream bis = new ByteArrayInputStream(Base64.getDecoder().decode(pngContent))){
-//            bf = ImageIO.read(bis);
-//        }catch (Exception ignored){}
-//
-//        byte[] image = null;
-//        try(ByteArrayOutputStream bos = new ByteArrayOutputStream()){
-//            //noinspection DataFlowIssue
-//            ImageIO.write(bf, "png", bos);
-//            image = bos.toByteArray();
-//        }catch (Exception ignored){}
-
         // TODO: find a way to attach screenshot without an error
-        Allure.addAttachment(testName, "image/png", pngContent, ".png");
+        Allure.addAttachment(testName, new ByteArrayInputStream(pngContent.getBytes()));
     }
 
 
